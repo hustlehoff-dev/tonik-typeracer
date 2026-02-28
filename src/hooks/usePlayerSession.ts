@@ -20,6 +20,23 @@ function generatePlayerId(): string {
   return `player_${Math.random().toString(36).slice(2)}_${Date.now()}`;
 }
 
+async function writePlayerToRTDB(id: string, name: string) {
+  if (!isFirebaseConfigured) return;
+  const playerRef = ref(database, `players/${id}`);
+  await set(playerRef, {
+    name,
+    currentText: '',
+    wpm: 0,
+    accuracy: 1,
+    isActive: true,
+    lastSeen: Date.now(),
+  });
+  onDisconnect(playerRef).update({
+    isActive: false,
+    lastSeen: serverTimestamp(),
+  });
+}
+
 export function usePlayerSession() {
   const [playerId, setPlayerId] = useState<string | null>(null);
   const [playerName, setPlayerName] = useState<string | null>(null);
@@ -35,6 +52,7 @@ export function usePlayerSession() {
     const savedName = localStorage.getItem(STORAGE_KEY_NAME);
     if (savedName) {
       setPlayerName(savedName);
+      writePlayerToRTDB(id, savedName);
     }
   }, []);
 
@@ -51,24 +69,8 @@ export function usePlayerSession() {
 
   const registerPlayer = useCallback(
     async (name: string) => {
-      if (!playerId || !isFirebaseConfigured) return;
-
-      const playerRef = ref(database, `players/${playerId}`);
-
-      await set(playerRef, {
-        name,
-        currentText: '',
-        wpm: 0,
-        accuracy: 1,
-        isActive: true,
-        lastSeen: Date.now(),
-      });
-
-      onDisconnect(playerRef).update({
-        isActive: false,
-        lastSeen: serverTimestamp(),
-      });
-
+      if (!playerId) return;
+      await writePlayerToRTDB(playerId, name);
       localStorage.setItem(STORAGE_KEY_NAME, name);
       setPlayerName(name);
     },
