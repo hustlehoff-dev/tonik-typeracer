@@ -19,32 +19,15 @@ import { formatAccuracy } from '@/lib/utils';
 
 const columnHelper = createColumnHelper<Player>();
 
-function LiveProgressCell({ player, sentence }: { player: Player; sentence: string }) {
-  const typed = player.currentText ?? '';
-
-  return (
-    <span className="font-mono text-sm">
-      {typed.split('').map((char, i) => (
-        <span key={i} className={char === sentence[i] ? 'text-green-400' : 'text-red-400'}>
-          {char}
-        </span>
-      ))}
-      <span className="animate-blink text-violet-400">|</span>
-      <span className="text-zinc-600">{sentence.slice(typed.length)}</span>
-    </span>
-  );
-}
-
 const PAGE_SIZE_OPTIONS = [5, 10, 25];
 
 interface PlayersTableProps {
   players: Player[];
   loading: boolean;
-  sentence: string;
   currentPlayerId?: string | null;
 }
 
-export function PlayersTable({ players, loading, sentence, currentPlayerId }: PlayersTableProps) {
+export function PlayersTable({ players, loading, currentPlayerId }: PlayersTableProps) {
   const [sortColumn, setSortColumn] = useQueryState('sort', parseAsString.withDefault('wpm'));
   const [sortDir, setSortDir] = useQueryState('order', parseAsString.withDefault('desc'));
   const [page, setPage] = useQueryState('page', parseAsInteger.withDefault(1));
@@ -57,14 +40,6 @@ export function PlayersTable({ players, loading, sentence, currentPlayerId }: Pl
 
   const columns = useMemo(
     () => [
-      columnHelper.accessor('currentText', {
-        id: 'currentText',
-        header: 'Live Progress',
-        enableSorting: false,
-        cell: (info) => (
-          <LiveProgressCell player={info.row.original} sentence={sentence} />
-        ),
-      }),
       columnHelper.accessor('name', {
         header: 'Player Name',
         cell: (info) => (
@@ -95,7 +70,7 @@ export function PlayersTable({ players, loading, sentence, currentPlayerId }: Pl
         ),
       }),
     ],
-    [sentence, currentPlayerId]
+    [currentPlayerId]
   );
 
   const table = useReactTable({
@@ -170,7 +145,7 @@ export function PlayersTable({ players, loading, sentence, currentPlayerId }: Pl
           <tbody>
             {table.getRowModel().rows.length === 0 ? (
               <tr>
-                <td colSpan={4} className="px-4 py-8 text-center text-zinc-500">
+                <td colSpan={3} className="px-4 py-8 text-center text-zinc-500">
                   No players yet. Be the first to join!
                 </td>
               </tr>

@@ -14,6 +14,7 @@ import { RoundTimer } from './RoundTimer';
 import { PlayersTable } from './PlayersTable';
 import { PlayerNameModal } from './PlayerNameModal';
 import { LobbyRoom } from './LobbyRoom';
+import { RaceArena } from './RaceArena';
 import { Skeleton } from './ui/skeleton';
 import { Badge } from './ui/badge';
 import { Button } from './ui/button';
@@ -122,7 +123,7 @@ export function GameArena() {
       )}
 
       {gameState?.status === 'playing' && (
-        <div className="space-y-6">
+        <div className="space-y-5">
           <div className="flex items-center justify-between">
             <Badge variant="secondary">Round {gameState.roundNumber}</Badge>
             <div className="flex-1 ml-4">
@@ -142,13 +143,34 @@ export function GameArena() {
             </Button>
           </div>
 
-          <SentenceDisplay
-            sentence={gameState.currentSentence}
-            typedText={typedText}
-            finished={finished}
-          />
+          <div>
+            <h2 className="mb-2 text-xs font-semibold uppercase tracking-wider text-zinc-500">
+              Arena
+            </h2>
+            <RaceArena
+              players={players}
+              sentence={gameState.currentSentence}
+              currentPlayerId={playerId}
+            />
+          </div>
 
-          <div className="space-y-2">
+          <div>
+            <h2 className="mb-2 text-xs font-semibold uppercase tracking-wider text-zinc-500">
+              Competitors
+            </h2>
+            <PlayersTable
+              players={players}
+              loading={playersLoading}
+              currentPlayerId={playerId}
+            />
+          </div>
+
+          <div className="space-y-2 pt-2 border-t border-zinc-800">
+            <SentenceDisplay
+              sentence={gameState.currentSentence}
+              typedText={typedText}
+              finished={finished}
+            />
             <TypingInput
               value={typedText}
               onChange={handleChange}
@@ -160,7 +182,6 @@ export function GameArena() {
                   gameState.currentSentence[typedText.length - 1]
               }
             />
-
             {playerName && (
               <div className="flex gap-4 text-sm text-zinc-400">
                 <span>
@@ -183,18 +204,6 @@ export function GameArena() {
                 )}
               </div>
             )}
-          </div>
-
-          <div>
-            <h2 className="mb-3 text-sm font-semibold uppercase tracking-wider text-zinc-400">
-              Competitors
-            </h2>
-            <PlayersTable
-              players={players}
-              loading={playersLoading}
-              sentence={gameState.currentSentence}
-              currentPlayerId={playerId}
-            />
           </div>
         </div>
       )}
