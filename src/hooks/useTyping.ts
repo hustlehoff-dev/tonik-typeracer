@@ -20,6 +20,13 @@ export function useTyping({ playerId, targetText, roundNumber }: UseTypingOption
     setTypedText('');
     setFinished(false);
     startTimeRef.current = null;
+    if (playerId && isFirebaseConfigured) {
+      update(ref(database, `players/${playerId}`), {
+        currentText: '',
+        wpm: 0,
+        accuracy: 1,
+      });
+    }
   }, [roundNumber]);
 
   const pushToFirebase = useCallback(
