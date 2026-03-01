@@ -2,7 +2,7 @@
 
 Real-time multiplayer typing competition. Multiple players race to type the same sentence — live progress, WPM and accuracy sync across all connected clients instantly.
 
-**[Live demo →](https://tonik-typeracer.vercel.app)**
+**[Live demo →](https://tonikracer.netlify.app)**
 
 ---
 
@@ -46,15 +46,12 @@ Logic lives in custom hooks (`useTyping`, `useGameState`, `usePlayers`, `usePlay
 
 ## Running locally
 
-```bash
-cp .env.local.example .env.local
-# fill in Firebase credentials
-npm install
-npm run dev
-```
+1. Create a Firebase project — enable **Realtime Database** and **Firestore** (test mode)
+2. Add credentials to `.env.local` (see variable names in `src/lib/firebase.ts`)
 
 ```bash
-npm run test   # 22 unit tests
+npm install
+npm run dev
 ```
 
 ---
