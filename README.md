@@ -63,7 +63,7 @@ npm run test   # 22 unit tests
 
 Config files and boilerplate (Next.js, Tailwind, Vitest setup), shadcn/ui component wiring, basic HTML scaffolding of UI components.
 
-Architecture decisions, data modelling, the real-time sync strategy, transaction logic, WPM/accuracy calculations, player session handling, lobby mechanic and debugging were done by hand.
+Architecture decisions, data modelling, the real-time sync strategy, transaction logic, WPM/accuracy calculations, player session handling, lobby mechanic and debugging were prototyped and refined by hand.
 
 ---
 
