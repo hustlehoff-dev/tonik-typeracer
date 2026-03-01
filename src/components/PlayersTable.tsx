@@ -21,13 +21,16 @@ const columnHelper = createColumnHelper<Player>();
 
 function LiveProgressCell({ player, sentence }: { player: Player; sentence: string }) {
   const typed = player.currentText ?? '';
-  const typed_len = typed.length;
 
   return (
-    <span className="font-mono text-sm whitespace-pre">
-      <span className="text-green-400">{sentence.slice(0, typed_len)}</span>
+    <span className="font-mono text-sm">
+      {typed.split('').map((char, i) => (
+        <span key={i} className={char === sentence[i] ? 'text-green-400' : 'text-red-400'}>
+          {char}
+        </span>
+      ))}
       <span className="animate-blink text-violet-400">|</span>
-      <span className="text-zinc-600">{sentence.slice(typed_len)}</span>
+      <span className="text-zinc-600">{sentence.slice(typed.length)}</span>
     </span>
   );
 }

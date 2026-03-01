@@ -1,4 +1,9 @@
 export const SENTENCES: string[] = [
+  'Working at a company that leverages AI instead of punishing you for using it is genuinely awesome.',
+  'The best teams treat AI as a multiplier not a cheat code and hire people who know the difference.',
+  'A company that embraces AI tooling ships faster, burns out less and actually has time to refactor.',
+  'Using AI to write boilerplate so humans can focus on hard problems is just good engineering.',
+  'If your recruiter asks whether you used AI you are probably applying to the wrong company.',
   'The quick brown fox jumps over the lazy dog near the river bank.',
   'Programming is the art of telling another human what one wants the computer to do.',
   'In the beginning was the Word, and the Word was with God, and the Word was God.',
