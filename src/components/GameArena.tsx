@@ -70,7 +70,7 @@ async function persistPlayerStats(
 }
 
 export function GameArena() {
-  const { playerId, playerName, registerPlayer, toggleReady } = usePlayerSession();
+  const { playerId, playerName, playerAvatar, registerPlayer, toggleReady, selectAvatar } = usePlayerSession();
   const { gameState, loading: gameLoading, error: gameError } = useGameState();
   const { players, loading: playersLoading } = usePlayers();
   const [resetting, setResetting] = useState(false);
@@ -118,7 +118,9 @@ export function GameArena() {
         <LobbyRoom
           players={players}
           currentPlayerId={playerId}
+          currentAvatar={playerAvatar}
           onToggleReady={toggleReady}
+          onSelectAvatar={selectAvatar}
         />
       )}
 

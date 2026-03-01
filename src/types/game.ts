@@ -7,6 +7,7 @@ export interface Player {
   isActive: boolean;
   lastSeen: number;
   ready?: boolean;
+  avatar?: string;
 }
 
 export interface GameState {

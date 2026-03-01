@@ -6,13 +6,23 @@ import { startGame } from '@/lib/roundManager';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 
+export const AVATARS = ['🏎️', '🚗', '🚙', '🚕', '🐕', '🐈', '🐶', '🐱'];
+
 interface LobbyRoomProps {
   players: Player[];
   currentPlayerId: string | null;
+  currentAvatar: string;
   onToggleReady: (currentReady: boolean) => Promise<void>;
+  onSelectAvatar: (avatar: string) => Promise<void>;
 }
 
-export function LobbyRoom({ players, currentPlayerId, onToggleReady }: LobbyRoomProps) {
+export function LobbyRoom({
+  players,
+  currentPlayerId,
+  currentAvatar,
+  onToggleReady,
+  onSelectAvatar,
+}: LobbyRoomProps) {
   const [starting, setStarting] = useState(false);
   const [copied, setCopied] = useState(false);
 
@@ -43,6 +53,28 @@ export function LobbyRoom({ players, currentPlayerId, onToggleReady }: LobbyRoom
         </Button>
       </div>
 
+      <div>
+        <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-zinc-500">
+          Your avatar
+        </p>
+        <div className="flex gap-2 flex-wrap">
+          {AVATARS.map((emoji) => (
+            <button
+              key={emoji}
+              onClick={() => onSelectAvatar(emoji)}
+              className={[
+                'text-3xl rounded-lg border-2 p-2 transition-colors',
+                currentAvatar === emoji
+                  ? 'border-violet-500 bg-violet-950/40'
+                  : 'border-zinc-700 hover:border-zinc-500',
+              ].join(' ')}
+            >
+              {emoji}
+            </button>
+          ))}
+        </div>
+      </div>
+
       <div className="rounded-lg border border-zinc-700 divide-y divide-zinc-800">
         {players.length === 0 ? (
           <p className="px-4 py-6 text-center text-zinc-500 text-sm">
@@ -51,10 +83,11 @@ export function LobbyRoom({ players, currentPlayerId, onToggleReady }: LobbyRoom
         ) : (
           players.map((player) => (
             <div key={player.id} className="flex items-center justify-between px-4 py-3">
-              <span className="text-zinc-200">
+              <span className="flex items-center gap-2 text-zinc-200">
+                <span className="text-2xl">{player.avatar ?? '🏎️'}</span>
                 {player.name}
                 {player.id === currentPlayerId && (
-                  <span className="ml-2 text-xs text-violet-400">(you)</span>
+                  <span className="text-xs text-violet-400">(you)</span>
                 )}
               </span>
               <Badge
