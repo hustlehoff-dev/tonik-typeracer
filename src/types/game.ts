@@ -6,9 +6,11 @@ export interface Player {
   accuracy: number;
   isActive: boolean;
   lastSeen: number;
+  ready?: boolean;
 }
 
 export interface GameState {
+  status: 'lobby' | 'playing';
   currentSentence: string;
   roundEndTime: number;
   roundNumber: number;

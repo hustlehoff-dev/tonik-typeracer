@@ -13,6 +13,7 @@ import { TypingInput } from './TypingInput';
 import { RoundTimer } from './RoundTimer';
 import { PlayersTable } from './PlayersTable';
 import { PlayerNameModal } from './PlayerNameModal';
+import { LobbyRoom } from './LobbyRoom';
 import { Skeleton } from './ui/skeleton';
 import { Badge } from './ui/badge';
 import { Button } from './ui/button';
@@ -68,7 +69,7 @@ async function persistPlayerStats(
 }
 
 export function GameArena() {
-  const { playerId, playerName, registerPlayer } = usePlayerSession();
+  const { playerId, playerName, registerPlayer, toggleReady } = usePlayerSession();
   const { gameState, loading: gameLoading, error: gameError } = useGameState();
   const { players, loading: playersLoading } = usePlayers();
   const [resetting, setResetting] = useState(false);
@@ -112,7 +113,15 @@ export function GameArena() {
     <>
       <PlayerNameModal open={!playerName} onSubmit={registerPlayer} />
 
-      {gameState && (
+      {gameState?.status === 'lobby' && (
+        <LobbyRoom
+          players={players}
+          currentPlayerId={playerId}
+          onToggleReady={toggleReady}
+        />
+      )}
+
+      {gameState?.status === 'playing' && (
         <div className="space-y-6">
           <div className="flex items-center justify-between">
             <Badge variant="secondary">Round {gameState.roundNumber}</Badge>

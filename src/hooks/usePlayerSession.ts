@@ -8,6 +8,7 @@ import {
   onDisconnect,
   serverTimestamp,
 } from 'firebase/database';
+
 import { database, isFirebaseConfigured } from '@/lib/firebase';
 
 const STORAGE_KEY_ID = 'typeracer_player_id';
@@ -77,5 +78,13 @@ export function usePlayerSession() {
     [playerId]
   );
 
-  return { playerId, playerName, registerPlayer };
+  const toggleReady = useCallback(
+    async (currentReady: boolean) => {
+      if (!playerId || !isFirebaseConfigured) return;
+      await update(ref(database, `players/${playerId}`), { ready: !currentReady });
+    },
+    [playerId]
+  );
+
+  return { playerId, playerName, registerPlayer, toggleReady };
 }
