@@ -96,7 +96,6 @@ export function GameArena() {
     const allDone = players.every((p) => p.currentText === sentence);
     if (allDone && !allFinishedTriggeredRef.current) {
       allFinishedTriggeredRef.current = true;
-      confetti({ particleCount: 160, spread: 90, origin: { y: 0.6 } });
       setTimeout(() => maybeStartNewRound(gameState.roundNumber, sentence), 2500);
     }
   }, [players, gameState]);
@@ -110,6 +109,12 @@ export function GameArena() {
     targetText: gameState?.currentSentence ?? '',
     roundNumber: gameState?.roundNumber ?? 0,
   });
+
+  useEffect(() => {
+    if (finished) {
+      confetti({ particleCount: 160, spread: 90, origin: { y: 0.6 } });
+    }
+  }, [finished]);
 
   const handleFinish = useCallback(async () => {
     if (!playerId || !playerName || !isFirebaseConfigured) return;
