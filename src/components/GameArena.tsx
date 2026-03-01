@@ -1,9 +1,10 @@
 'use client';
 
-import { useCallback, useState } from 'react';
+import { useCallback, useState, useEffect, useRef } from 'react';
+import confetti from 'canvas-confetti';
 import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
 import { firestore, isFirebaseConfigured } from '@/lib/firebase';
-import { resetGame } from '@/lib/roundManager';
+import { resetGame, maybeStartNewRound } from '@/lib/roundManager';
 import { useGameState } from '@/hooks/useGameState';
 import { usePlayers } from '@/hooks/usePlayers';
 import { useTyping } from '@/hooks/useTyping';
@@ -84,6 +85,25 @@ export function GameArena() {
       setResetting(false);
     }
   }, []);
+
+  const allFinishedTriggeredRef = useRef(false);
+
+  useEffect(() => {
+    if (!gameState || gameState.status !== 'playing') return;
+    const sentence = gameState.currentSentence;
+    if (!sentence || players.length === 0) return;
+
+    const allDone = players.every((p) => p.currentText === sentence);
+    if (allDone && !allFinishedTriggeredRef.current) {
+      allFinishedTriggeredRef.current = true;
+      confetti({ particleCount: 160, spread: 90, origin: { y: 0.6 } });
+      setTimeout(() => maybeStartNewRound(gameState.roundNumber, sentence), 2500);
+    }
+  }, [players, gameState]);
+
+  useEffect(() => {
+    allFinishedTriggeredRef.current = false;
+  }, [gameState?.roundNumber]);
 
   const { typedText, finished, wpm, accuracy, handleChange } = useTyping({
     playerId,
